@@ -54,7 +54,8 @@ def display_kpi(filtered_df):
         st.metric('📚 Total Schools', f'{len(filtered_df):,}')
 
     with col2:
-        st.metric('👩🏻‍🤝‍👩🏼 Total Students', f'{len(filtered_df):,}')
+        tot_stud = filtered_df['total_student'].sum() if len(filtered_df) > 0 else 0
+        st.metric('👩🏻‍🤝‍👩🏼 Total Students', f'{tot_stud:,}')
     
     with col3:
         average_studs = filtered_df['total_student'].mean() if len(filtered_df) > 0 else 0
@@ -80,11 +81,11 @@ def display_charts(filtered_df):
         st.subheader('Distribution of School Types')
         school_count = filtered_df['facility_type'].value_counts()
         fig1 = px.bar(
-            x=school_count.values,
-            y=school_count.index,
+            x=school_count.index,
+            y=school_count.values,
         )
         fig1.update_layout(
-            xaxis_title='Type',
+            xaxis_title='School Type',
             yaxis_title='Frequency'
         )
         st.plotly_chart(fig1, width='stretch')
@@ -92,7 +93,7 @@ def display_charts(filtered_df):
     with col2:
         st.subheader('Students Population Distribution')
         fig2 = px.histogram(
-            filtered_df, x='total_student', nbins=10
+            filtered_df, x='total_student', nbins=20
         )
         fig2.update_traces(
             marker_line_color='white',
@@ -100,7 +101,7 @@ def display_charts(filtered_df):
         )
 
         fig2.update_layout(
-            xaxis_title='Students Population',
+            xaxis_title='School Population',
             yaxis_title='Count'
         )
         st.plotly_chart(fig2, width='stretch')
@@ -111,8 +112,8 @@ def display_charts(filtered_df):
         st.subheader('School Management Comparision')
         mgt_count = filtered_df['management'].value_counts()
         fig3 = px.bar(
-            x=mgt_count.values,
-            y=mgt_count.index,
+            x=mgt_count.index,
+            y=mgt_count.values,
         )
         fig3.update_layout(
             xaxis_title='Management Type',
